@@ -22,9 +22,12 @@ PROCESS_PIPE_TEMPLATE = "process_pipe_template.jinja"
 
 NETFLOW_PIVOT_COLUMNS = ["host_id", "sensor_id", "sensor_tenant", "sensor_type", "tenant_id"]
 HTTP_PIVOT_COLUMNS = ["host_id", "process_correlation_id", "resource_id", "sensor_id", "sensor_type", "tenant_id"]
+DETECTIONFINDING_PIVOT_COLUMNS = ["host_id", "resource_id", "sensor_id", "sensor_tenant", "sensor_type", "tenant_id"]
+
 
 NETFLOW = "netflow"
 HTTP = "HTTP"
+DETECTIONFINDING = "detectionfinding"
 
 CONFIG = get_config()
 if not CONFIG.has_section(QUERIES_SECTION):
@@ -281,6 +284,16 @@ def process_pivot_http(
 ) -> pd.DataFrame:
 
     return _process_pivot_base_func(df, region, tenant_id, PROCESS_PIPE_TEMPLATE, HTTP, HTTP_PIVOT_COLUMNS, earliest)
+
+def process_pivot_detectionfinding(
+    df: pd.DataFrame,
+    *,
+    region: str,
+    tenant_id: str,
+    earliest: Optional[str] = "1d"
+) -> pd.DataFrame:
+
+    return _process_pivot_base_func(df, region, tenant_id, PROCESS_PIPE_TEMPLATE, DETECTIONFINDING, DETECTIONFINDING_PIVOT_COLUMNS, earliest)
 
 
 def _process_pivot_base_func(
